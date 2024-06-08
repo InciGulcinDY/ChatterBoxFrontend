@@ -1,7 +1,8 @@
 import React from "react";
 import { UserModel } from "../models/UserModel";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFriend } from "../store/friendSlice";
+import { RootState } from "../store/configureStore";
 
 type Props = {
   friend: UserModel;
@@ -10,6 +11,9 @@ type Props = {
 
 const FriendsProfileCard: React.FC<Props> = ({ friend, unreadCount }) => {
   const dispatch = useDispatch();
+  const selectedFriendId = useSelector(
+    (state: RootState) => state.friend.friend?.id
+  );
 
   const handleClick = () => {
     dispatch(setFriend(friend));
@@ -17,14 +21,19 @@ const FriendsProfileCard: React.FC<Props> = ({ friend, unreadCount }) => {
 
   return (
     <div className="btn d-grid py-0 px-0" onClick={handleClick}>
-      <div className="card mb-1" style={{ height: "auto" }}>
+      <div
+        className={`card mb-3  ${
+          friend.id === selectedFriendId ? "border-warning shadow p-3 bg-body-tertiary border border-2" : ""
+        }`}
+        style={{ height: "auto" }}
+      >
         <div className="row g-0">
           <div className="col-md-4 d-flex align-items-center justify-content-center">
-            <img 
-              src={friend.image} 
-              className="img-fluid rounded-circle border border-3 border-secondary" 
-              alt="profile" 
-              style={{ width: '70px', height: '70px', objectFit: 'cover' }} 
+            <img
+              src={friend.image}
+              className="img-fluid rounded-circle border border-3 border-secondary"
+              alt="profile"
+              style={{ width: "70px", height: "70px", objectFit: "cover" }}
             />
           </div>
           <div className="col-md-8">
@@ -36,7 +45,9 @@ const FriendsProfileCard: React.FC<Props> = ({ friend, unreadCount }) => {
                 )}
               </h5>
               <p className="card-text">
-                <small className="text-muted">Last message received 3 mins ago</small>
+                <small className="text-muted">
+                  Last message received 3 mins ago
+                </small>
               </p>
             </div>
           </div>

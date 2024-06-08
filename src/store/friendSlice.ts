@@ -7,8 +7,8 @@ export interface FriendState {
 }
 
 const initialState: FriendState = {
-    friend: JSON.parse(localStorage.getItem("friend") || "null"),
-    unreadMessageCount: 0
+    friend: null,
+    unreadMessageCount: 0,
 }
 
 const friendSlice = createSlice({
@@ -21,7 +21,8 @@ const friendSlice = createSlice({
         },
         setUnreadMessageCount(state, action: PayloadAction<number>) {
             state.unreadMessageCount = action.payload;
-        }
+        },
+
     }
 });
 

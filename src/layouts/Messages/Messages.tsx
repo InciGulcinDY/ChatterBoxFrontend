@@ -5,13 +5,14 @@ import { MessageModel } from '../../models/MessageModel';
 import MessageService from '../../services/MessageService';
 
 type Props = {
-  messages: MessageModel[]
+  messages: MessageModel[];
   currentUserId: number;
   selectedCorrespondentId: number | null;
+  onMessageRead: (messageId: number) => void;
 };
 
-const Messages: React.FC<Props> = ({ currentUserId, selectedCorrespondentId }) => {
-  const [messages, setMessages] = useState<MessageModel[]>([]);
+const Messages: React.FC<Props> = ({ messages: initialMessages, currentUserId, selectedCorrespondentId, onMessageRead }) => {
+  const [messages, setMessages] = useState<MessageModel[]>(initialMessages);
 
   useEffect(() => {
     if (selectedCorrespondentId === null) return;
@@ -30,6 +31,7 @@ const Messages: React.FC<Props> = ({ currentUserId, selectedCorrespondentId }) =
 
   const handleMarkAsRead = (messageId: number) => {
     setMessages((prevMessages) => prevMessages.filter((message) => message.id !== messageId));
+    onMessageRead(messageId);
   };
 
   return (

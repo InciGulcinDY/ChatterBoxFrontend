@@ -7,32 +7,33 @@ import { MessageModel } from '../models/MessageModel';
 import MessageService from '../services/MessageService';
 import { RootState } from '../store/configureStore';
 import './MyMessagesPage.css';
-import { setMessages } from '../store/messagesSlice';
+import { setMessages, markMessageAsRead as markMessageAsReadAction } from '../store/messagesSlice';
 import { UserModel } from '../models/UserModel';
 
-const MyMessagesPage = () => {
-  //  UnRead Messages
-  const [unreadMessages, setUnreadMessagesState] = useState<MessageModel[]>([]);
 
-  //  Archieved Messages
+const POLLING_INTERVAL = 10000; // Poll every 10 seconds
+
+const MyMessagesPage = () => {
+  // Unread Messages
+  const [unreadMessages, setUnreadMessagesState] = useState<MessageModel[]>([]);
+  // Archived Messages
   const [archivedMessages, setArchivedMessages] = useState<MessageModel[]>([]);
   const [showArchived, setShowArchived] = useState<boolean>(false);
-
-  //  Friends
+  // Friends
   const [friends, setFriends] = useState<UserModel[]>([]);
   const friendId = useSelector((state: RootState) => state.friend.friend?.id) || 1;
-  const [selectedCorrespondent, setSelectedCorrespondent] = useState<number | null>(null);
+  const [selectedFriend, setSelectedFriend] = useState<number | null>(null);
   const [unreadCounts, setUnreadCounts] = useState<{ [key: number]: number }>({});
 
-  //  State variables to manage loading state and error handling.
+  // State variables to manage loading state and error handling.
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  //  Current User
+  // Current User
   const dispatch = useDispatch();
   const currentUserId = 1;
   
-  //  Fetching friends of user for Side Panel
+  // Fetching friends of user for Side Panel
   useEffect(() => {
     const fetchFriends = async () => {
       try {
@@ -50,16 +51,22 @@ const MyMessagesPage = () => {
     };
 
     fetchFriends();
+
+    //  Frontend checks for new messages at specified intervals
+    const intervalId = setInterval(fetchFriends, POLLING_INTERVAL);
+    //  Clear interval on component unmount
+    return () => clearInterval(intervalId); 
+
   }, [currentUserId]);
 
-  //  
+  // Fetching Messages
   useEffect(() => {
-    if (selectedCorrespondent === null) return;
+    if (selectedFriend === null) return;
 
     const fetchMessages = async () => {
       try {
         setLoading(true);
-        const fetchedUnreadMessages = await MessageService.getUnreadMessages(currentUserId, selectedCorrespondent);
+        const fetchedUnreadMessages = await MessageService.getUnreadMessages(currentUserId, selectedFriend);
         setUnreadMessagesState(fetchedUnreadMessages);
         dispatch(setMessages(fetchedUnreadMessages));
       } catch (err) {
@@ -71,17 +78,26 @@ const MyMessagesPage = () => {
     };
 
     fetchMessages();
-  }, [selectedCorrespondent, currentUserId, dispatch]);
+  
+    //  Frontend checks for new messages at specified intervals
+    const intervalId = setInterval(fetchMessages, POLLING_INTERVAL);
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId); 
+  }, [selectedFriend, currentUserId, dispatch]);
 
-  const handleCorrespondentSelect = useCallback((correspondentId: number) => {
-    setSelectedCorrespondent(correspondentId);
+  //  Handling Functions for Selection of Friends
+  const handleFriendSelect = useCallback((selectedFriendId: number) => {
+    setShowArchived(false);
+    setSelectedFriend(selectedFriendId);
+
   }, []);
 
+  //  Handling Functions for Showing Archieves
   const handleShowArchivedMessages = async () => {
     try {
       setLoading(true);
       if (!showArchived) {
-        const fetchedArchivedMessages = await MessageService.getReadMessages(currentUserId, selectedCorrespondent!);
+        const fetchedArchivedMessages = await MessageService.getReadMessages(currentUserId, selectedFriend!);
         setArchivedMessages(fetchedArchivedMessages);
       }
       setShowArchived(!showArchived);
@@ -93,8 +109,10 @@ const MyMessagesPage = () => {
     }
   };
 
+  //  Handling Functions for Marking Message as Read
   const handleMarkAsRead = (messageId: number) => {
     setUnreadMessagesState((prevMessages) => prevMessages.filter((message) => message.id !== messageId));
+    dispatch(markMessageAsReadAction(messageId));
   };
 
   return (
@@ -104,30 +122,42 @@ const MyMessagesPage = () => {
           <SidePanel 
             friends={friends}
             unreadCounts={unreadCounts}
-            onSelectCorrespondent={handleCorrespondentSelect} 
+            onSelectedFriend={handleFriendSelect} 
           />
         </div>
         <div className="col-9 bg-light-subtle" style={{ position: "relative" }}>
+
+          {selectedFriend ? (
           <button onClick={handleShowArchivedMessages} className="btn btn-secondary">
-            {showArchived ? 'Hide Archived' : 'See More'}
-          </button>
+          {showArchived ? 'Hide Archived' : 'See More'}
+        </button>
+          ): (
+            <div className='font-monospace text-primary-emphasis mt-5'>
+              <h3>Welcome to Your Chatting Getaway!</h3>
+              <h6>Where Every Moment Is Worth Sharing</h6>
+            </div>
+
+          )}
+
           <div style={{ marginBottom: "200px" }}>
             {loading && <p>Loading messages...</p>}
             {error && <p>{error}</p>}
-            {selectedCorrespondent !== null && (
+            {selectedFriend !== null && (
               <>
                 {unreadMessages.length > 0 && (
                   <Messages 
                     messages={unreadMessages}
                     currentUserId={currentUserId} 
-                    selectedCorrespondentId={selectedCorrespondent} 
+                    selectedCorrespondentId={selectedFriend} 
+                    onMessageRead={handleMarkAsRead} 
                   />
                 )}
                 {showArchived && archivedMessages.length > 0 && (
                   <Messages 
-                    messages={unreadMessages}
+                    messages={archivedMessages}
                     currentUserId={currentUserId} 
-                    selectedCorrespondentId={selectedCorrespondent} 
+                    selectedCorrespondentId={selectedFriend} 
+                    onMessageRead={handleMarkAsRead} 
                   />
                 )}
               </>

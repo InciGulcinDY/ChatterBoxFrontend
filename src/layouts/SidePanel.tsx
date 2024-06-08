@@ -5,15 +5,15 @@ import { UserModel } from '../models/UserModel';
 type Props = {
   friends: UserModel[];
   unreadCounts: { [key: number]: number };
-  onSelectCorrespondent: (correspondentId: number) => void;
+  onSelectedFriend: (selectedFriendId: number) => void;
 };
 
-const SidePanel: React.FC<Props> = ({ friends, unreadCounts, onSelectCorrespondent }) => {
+const SidePanel: React.FC<Props> = ({ friends, unreadCounts, onSelectedFriend }) => {
   return (
     <div className='mt-2'>
       {friends.length > 0 ? (
         friends.map(friend => (
-          <div key={friend.id} onClick={() => onSelectCorrespondent(friend.id)}>
+          <div key={friend.id} onClick={() => onSelectedFriend(friend.id)}>
             <FriendsProfileCard friend={friend} unreadCount={unreadCounts[friend.id] || 0} />
           </div>
         ))
