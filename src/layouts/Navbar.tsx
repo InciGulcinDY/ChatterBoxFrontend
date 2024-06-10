@@ -1,12 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ProfileCard from "../components/ProfileCard";
 import { IconComponent } from "../utils/Icons";
 import UserNarbarCard from "../components/UserNarbarCard";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/configureStore";
+import LoginCard from "../components/LoginCard";
+import RegisterCard from "../components/RegisterCard";
 
 type Props = {};
 
 const Navbar: React.FC<Props> = () => {
+
+  const isLogin = useSelector((state: RootState) => state.user.isLogin);
+
   return (
     <div style={{marginBottom:60}}>
       <nav className="navbar navbar-light bg-light fixed-top">
@@ -20,8 +26,10 @@ const Navbar: React.FC<Props> = () => {
               Chatter Box
             </Link>
           </div>
-          {/*<UserNarbarCard />*/}
-          <ProfileCard />
+
+          {/* Profile | Login | Register */
+          isLogin ? <UserNarbarCard /> : <div> <LoginCard /> <RegisterCard /> </div>         
+          }         
         </div>
       </nav>
     </div>

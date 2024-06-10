@@ -1,12 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { MessageModel } from '../models/MessageModel';
+import MessageSendingCard from '../components/MessageSendingCard';
+import { SentMessageModel } from '../models/SentMessageModel';
 
 type MessagesState = {
   messages: MessageModel[];
+  sentMessage: SentMessageModel | null;
 };
 
 const initialState: MessagesState = {
   messages: [],
+  sentMessage: {
+    //id: null,
+    content: '',
+    senderId: null,
+    recipientId: null,
+    //read: null,
+    //createdDate: null,
+
+  }
 };
 
 const messagesSlice = createSlice({
@@ -23,9 +35,12 @@ const messagesSlice = createSlice({
         message.read = true;
       }
     },
+    setSentMessage(state, action: PayloadAction<SentMessageModel | null>) {
+      state.sentMessage = action.payload;
+    },
   },
 });
 
-export const { setMessages, markMessageAsRead } = messagesSlice.actions;
+export const { setMessages, markMessageAsRead, setSentMessage } = messagesSlice.actions;
 
 export default messagesSlice.reducer;

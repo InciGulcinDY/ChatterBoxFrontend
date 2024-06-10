@@ -3,6 +3,6 @@ export interface AddMessageModel {
 
     content: string;
 	senderId: number;
-    recipientId: number;
+    recipientId: number | null;
 
 }

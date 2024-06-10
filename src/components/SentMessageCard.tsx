@@ -1,8 +1,10 @@
 import React from "react";
 import { MessageModel } from "../models/MessageModel";
+import { SentMessageModel } from "../models/SentMessageModel";
 
 type Props = {
-  message: MessageModel;
+  message: MessageModel 
+  //| SentMessageModel;
 };
 
 const SentMessageCard: React.FC<Props> = ({ message }) => {

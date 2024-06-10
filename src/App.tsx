@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import store from "./store/configureStore";
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/api/login" element={<Login />} />
+          <Route path="/api/register" element={<Register />} />
           <Route path="/api/messages/:id" element={<MyMessagesPage />} />
         </Routes>
 
