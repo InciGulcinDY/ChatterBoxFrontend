@@ -14,7 +14,7 @@ import {
 import { UserModel } from "../models/UserModel";
 import Messages from "../layouts/Messages";
 
-const POLLING_INTERVAL = 10000; // Poll every 10 seconds
+const POLLING_INTERVAL = 10000; 
 
 const MyMessagesPage = () => {
   // Unread Messages
@@ -69,7 +69,7 @@ const MyMessagesPage = () => {
     //  Frontend checks for new messages at specified intervals
     const intervalId = setInterval(fetchFriends, POLLING_INTERVAL);
     //  Clear interval on component unmount
-    return () => clearInterval(intervalId);
+    //return () => clearInterval(intervalId);
   }, [currentUserId]);
 
   // Fetching Messages
@@ -114,7 +114,7 @@ const MyMessagesPage = () => {
     try {
       setLoading(true);
       if (!showArchived) {
-        const fetchedArchivedMessages = await MessageService.getReadMessages(
+        const fetchedArchivedMessages = await MessageService.getAllByFriend(
           currentUserId,
           selectedFriend!  
         );

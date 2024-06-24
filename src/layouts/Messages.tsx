@@ -15,6 +15,8 @@ type Props = {
   onMessageRead: (messageId: number) => void;
 };
 
+
+
 const Messages: React.FC<Props> = ({
   messages: initialMessages,
   currentUserId,
