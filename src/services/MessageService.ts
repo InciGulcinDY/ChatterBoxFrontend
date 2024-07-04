@@ -3,8 +3,17 @@ import { MessageModel } from "../models/MessageModel";
 import { UserModel } from "../models/UserModel";
 import { SuccessResponse } from "../models/SuccessResponse";
 import { SentMessageModel } from "../models/SentMessageModel";
+import { ChatMessageModel } from "../models/ChatMessageModel";
+import { API_BASE_URL } from "../utils/constants/apiConstants";
 
-const baseURL = "http://localhost:8080/api/messages";
+const baseURL = `${API_BASE_URL}/message`;
+
+// Son yazilanlarrrrrrrrrrr\111111111111
+
+const getAllMessages = async(room:string): Promise<ChatMessageModel[]> => {
+  const response = await axios.get<ChatMessageModel[]>(`${baseURL}/${room}`);
+  return response.data;
+}
 
 
 //  Fetching all messages of the user and his/her friend
@@ -81,6 +90,7 @@ const markAsRead = async (messageId: number) => {
 };
 
 const MessageService = {
+  getAllMessages,
   getAllByFriend,
   getAll,
   add,
