@@ -7,7 +7,7 @@ type Props = {
   unreadCounts: { [key: number]: number };
   onSelectedFriend: (selectedFriendId: number) => void;
 };
-
+//  Not: it may be used with the new design, delete later!
 const SidePanel: React.FC<Props> = ({ friends, unreadCounts, onSelectedFriend }) => {
   return (
     <div className='mt-2'>

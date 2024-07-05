@@ -4,13 +4,20 @@ import MessageService from "../services/MessageService";
 import { useDispatch } from "react-redux";
 import { setSentMessage } from "../store/messagesSlice";
 import { SentMessageModel } from "../models/SentMessageModel";
+import { useSocket } from "../utils/custom/useSocket";
 
 type Props = {
   senderId: number;
-  recipientId: number | null;
+  recipientId: number;
+  room: string;
 };
 
-const MessageSendingCard: React.FC<Props> = ({ senderId, recipientId }) => {
+const MessageSendingCard: React.FC<Props> = (props: Props) => {
+  const { sendData } = useSocket({
+    room: props.room,
+    userId: props.senderId,
+    recipientId: props.recipientId
+  });
   const dispatch = useDispatch();
   const [content, setContent] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
@@ -20,9 +27,28 @@ const MessageSendingCard: React.FC<Props> = ({ senderId, recipientId }) => {
     setContent(event.target.value);
   };
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (e : React.MouseEvent<HTMLButtonElement>) => {
     if (!content.trim()) return;
 
+    e.preventDefault();
+    if (content != "") {
+      console.log("Message sent successfully! - 1");
+      sendData({
+        content: content,
+      });
+      console.log("Message sent successfully! - 2");
+      const time = ""; //timeStampConverter(Math.floor(Date.now() / 1000));
+     /* addMessageToList({
+        content: content,
+        username: username,
+        createdDateTime: new Date(),
+        messageType: "CLIENT",
+      });*/
+      setContent("");
+    }
+
+
+    /*
     setLoading(true); // Set loading to true
     try {
       const newMessage: SentMessageModel = {
@@ -44,7 +70,7 @@ const MessageSendingCard: React.FC<Props> = ({ senderId, recipientId }) => {
       console.error("Error sending message:", error);
     } finally {
       setLoading(false); // Set loading to false
-    }
+    }*/
   };
 
   return (
@@ -70,7 +96,7 @@ const MessageSendingCard: React.FC<Props> = ({ senderId, recipientId }) => {
             maxLength={300} 
             value={content}
             onChange={handleChange}
-            disabled={recipientId == null || loading}
+            //disabled={recipientId ==  2}
           />
           <small className="text-muted">
             {300 - content.length} characters remaining

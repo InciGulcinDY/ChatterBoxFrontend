@@ -9,6 +9,7 @@ type Props = {
   unreadCount: number;
 };
 
+//  Not: it may be used with the new design, delete later!
 const FriendsProfileCard: React.FC<Props> = ({ friend, unreadCount }) => {
   const dispatch = useDispatch();
   const selectedFriendId = useSelector(

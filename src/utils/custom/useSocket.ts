@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import { SOCKET_BASE_URL } from "../constants/apiConstants";
+import { AddMessageModel } from "../../models/AddMessageModel";
 
 
 type Props = {
     room: string,
-    //username: string
+    userId: number;
+    recipientId: number;
 }
 
 export const useSocket = (props: Props) => {
@@ -20,17 +22,20 @@ export const useSocket = (props: Props) => {
     //createdDateTime: "",
   });
   const [isConnected, setConnected] = useState(false);   //tracks the connection status
-  /*const sendData = useCallback(
-    (payload:MessageModel) => {
-      socket.emit("send_message", {
-        room: props.room,
-        content: payload.content,
-        username: props.username,
-        messageType: "CLIENT",
-      });
+  const sendData = useCallback(
+    (payload:AddMessageModel) => {
+      if (socket) {
+        socket.emit("send_message", {
+          content: payload.content,
+          room: props.room,
+          senderId: props.userId,
+          recipientId: props.recipientId,
+          messageType: "CLIENT",
+        });
+      }
     },
     [socket, props.room]
-  );*/
+  );
   useEffect(() => {
     const socket = io(SOCKET_BASE_URL, {
       reconnection: false,
@@ -59,5 +64,5 @@ export const useSocket = (props: Props) => {
     };
   }, [props.room]);
 
-  return { socketResponse, isConnected};
+  return { socketResponse, isConnected, sendData};
 };

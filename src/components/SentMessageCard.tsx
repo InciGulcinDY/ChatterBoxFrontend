@@ -7,6 +7,7 @@ type Props = {
   //| SentMessageModel;
 };
 
+//  Not: it may be used with the new design, delete later!
 const SentMessageCard: React.FC<Props> = ({ message }) => {
   return (
     <div className="row justify-content-end">

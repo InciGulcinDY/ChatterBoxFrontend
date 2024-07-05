@@ -18,6 +18,7 @@ const MyChatPage = (props: Props) => {
 
   const [room, setRoom] = useState("beyzainci"); // TO DO: DEĞİŞTİR
   const userId = 1; // TO DO: DEĞİŞTİR
+  const recipientId= 2; // TO DO: DEĞİŞTİR
   
 
   return (
@@ -31,7 +32,7 @@ const MyChatPage = (props: Props) => {
             (room==='') ? (
               "Mesajınız yok"
             ):(
-              <MessageRoom userId={userId} room={room} />
+              <MessageRoom userId={userId} room={room} recipientId={recipientId} />
             )
           }
           

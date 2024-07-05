@@ -1,6 +1,5 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import MyMessagesPage from "./pages/MyMessagesPage";
 import Footer from "./layouts/Footer";
 import Navbar from "./layouts/Navbar";
 import { Provider } from "react-redux";
@@ -29,8 +28,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/api/login" element={<Login />} />
           <Route path="/api/register" element={<Register />} />
-          <Route path="/api/messages/:id" element={<MyMessagesPage />} />
-          <Route path="/api/chat" element={<MyChatPage />} />
+          <Route path="/api/chat" element={<MyChatPage />} /> 
         </Routes>
         
         <Footer />
