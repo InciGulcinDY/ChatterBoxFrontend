@@ -14,24 +14,23 @@ type Props = {
 const MessageRoom = (props: Props) => {
     const [messages, setMessages] = useState<ChatMessageModel[]>([]);
 
-    const username=  "in";
-    const socketInfo = {props, username}
+    //const username=  "in";
+    //const socketInfo = {props, username}
 
-    const { isConnected, socketResponse } = useSocket(props);
+    //const { isConnected, socketResponse } = useSocket(props);
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
               const fetchedMessages = await MessageService.getAllMessages(props.room);
+              
               setMessages(fetchedMessages);
             } catch (error) {
               console.error("Failed to fetch messages", error);
             }
           };
-
           fetchMessages();
-      return () => {
-        
+      return () => {        
       }
     }, [props.room])
 

@@ -32,11 +32,15 @@ const MessageSendingCard: React.FC<Props> = (props: Props) => {
 
     e.preventDefault();
     if (content != "") {
-      console.log("Message sent successfully! - 1");
+      //
       sendData({
         content: content,
+        room: props.room,
+        senderId: props.senderId,
+        recipientId: props.recipientId,
+        messageType: "CLIENT",
       });
-      console.log("Message sent successfully! - 2");
+      console.log("Message sent successfully!");
       const time = ""; //timeStampConverter(Math.floor(Date.now() / 1000));
      /* addMessageToList({
         content: content,

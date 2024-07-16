@@ -2,9 +2,9 @@
 export interface AddMessageModel {
 
     content: string;
-   /* room: string;
+    room: string;
 	senderId: number;
     recipientId: number | null;
-    messageType: string;*/
+    messageType: string;
 
 }

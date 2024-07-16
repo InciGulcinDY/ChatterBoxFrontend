@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Socket, io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import { SOCKET_BASE_URL } from "../constants/apiConstants";
 import { AddMessageModel } from "../../models/AddMessageModel";
 
@@ -17,36 +17,54 @@ export const useSocket = (props: Props) => {
     room: "",
     senderId: 0,
     recipientId: 0,
-    messageType: "",
-
-    //createdDateTime: "",
+    messageType: ""
   });
+ 
   const [isConnected, setConnected] = useState(false);   //tracks the connection status
+ 
   const sendData = useCallback(
     (payload:AddMessageModel) => {
       if (socket) {
+        console.log("Sending message", payload);
         socket.emit("send_message", {
           content: payload.content,
           room: props.room,
           senderId: props.userId,
           recipientId: props.recipientId,
           messageType: "CLIENT",
-        });
+        },'');
+      } else {
+        console.log("Connection error!");
       }
     },
-    [socket, props.room]
+    [socket, props.room, props.userId, props.recipientId]
   );
+
   useEffect(() => {
     const socket = io(SOCKET_BASE_URL, {
       reconnection: false,
       //reconnectionDelayMax: 10000,
       query: {
-        "room": `${props.room}`
+        "room": `room=${props.room}`,
       },
     });
     setSocket(socket);
-    socket.on("connect", () => setConnected(true));
-    socket.on("read_message", (res) => { 
+  
+    socket.on("connect", () => {
+      setConnected(true);
+      console.log("Socket connected with id:", socket.id); // Log the socket id here
+    });
+
+    /*socket.on("connect_error", (error) => {
+      if (socket.active) {
+        console.log(socket.id);
+      } else {
+        console.log(error.message);
+
+      }
+    });*/
+
+    /*socket.on("read_message", (res) => { 
       console.log(res);
       setSocketResponse({
         content: res.content,
@@ -56,10 +74,10 @@ export const useSocket = (props: Props) => {
         messageType: res.messageType,
         //createdDateTime: res.createdDateTime,//
       });
-    });
+    });*/
     return () => {
-      socket.off("connect");
-      socket.off("read_message");
+      //socket.off("connect");
+      //socket.off("read_message");
       socket.disconnect();
     };
   }, [props.room]);
