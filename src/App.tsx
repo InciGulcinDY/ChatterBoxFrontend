@@ -28,7 +28,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/api/login" element={<Login />} />
           <Route path="/api/register" element={<Register />} />
-          <Route path="/api/chat" element={<MyChatPage />} /> 
+          <Route path="/api/chat/:room" element={<MyChatPage />} /> 
         </Routes>
         
         <Footer />
