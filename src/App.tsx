@@ -14,10 +14,6 @@ import { useEffect } from "react";
 
 
 function App() {
- 
-  /*useEffect(() => {
-   // WebSocketService.connectToSocket();
-  }, []);*/
 
   return (
     <>
@@ -31,8 +27,7 @@ function App() {
           <Route path="/api/chat/:room" element={<MyChatPage />} /> 
         </Routes>
         
-        <Footer />
-        
+        <Footer />       
       </Provider>
     </>
   );

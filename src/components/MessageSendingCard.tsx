@@ -4,21 +4,19 @@ import MessageService from "../services/MessageService";
 import { useDispatch } from "react-redux";
 import { setSentMessage } from "../store/messagesSlice";
 import { SentMessageModel } from "../models/SentMessageModel";
-import { useSocket } from "../utils/custom/useSocket";
+import { Socket } from "socket.io-client";
+
 
 type Props = {
   senderId: number;
   recipientId: number;
   room: string;
+  socket:Socket | null;
 };
 
 const MessageSendingCard: React.FC<Props> = (props: Props) => {
-  const { sendData } = useSocket({
-    room: props.room,
-    userId: props.senderId,
-    recipientId: props.recipientId
-  });
-  const dispatch = useDispatch();
+
+  
   const [content, setContent] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(false); // New state for loading
@@ -31,50 +29,20 @@ const MessageSendingCard: React.FC<Props> = (props: Props) => {
     if (!content.trim()) return;
 
     e.preventDefault();
-    if (content != "") {
-      //
-      sendData({
+
+    if (content != "" && props.socket != null) {
+      props.socket.emit("send_message",{
         content: content,
         room: props.room,
         senderId: props.senderId,
-        recipientId: props.recipientId,
+        recipientId:props.recipientId,
         messageType: "CLIENT",
-      });
+      } );
       console.log("Message sent successfully!");
-      const time = ""; //timeStampConverter(Math.floor(Date.now() / 1000));
-     /* addMessageToList({
-        content: content,
-        username: username,
-        createdDateTime: new Date(),
-        messageType: "CLIENT",
-      });*/
+      const time = "";
       setContent("");
     }
 
-
-    /*
-    setLoading(true); // Set loading to true
-    try {
-      const newMessage: SentMessageModel = {
-        
-        content: content,
-        senderId: senderId,
-        recipientId: recipientId,
-      };
-      await MessageService.add(newMessage);
-      dispatch(setSentMessage(newMessage)); // Dispatch the new message directly
-      // Clear the input field after sending the message
-      setContent("");
-      // Show the success alert
-      setShowSuccess(true);
-      // Hide the success alert after 3 seconds
-      setTimeout(() => setShowSuccess(false), 3000);
-      console.log("Message sent successfully!");
-    } catch (error) {
-      console.error("Error sending message:", error);
-    } finally {
-      setLoading(false); // Set loading to false
-    }*/
   };
 
   return (
