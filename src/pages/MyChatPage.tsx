@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import io from 'socket.io-client';
-import { Server } from "http";
 import MessageRoom from '../layouts/MessageRoom';
 import { useNavigate, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +20,7 @@ const MyChatPage = (props: Props) => {
   const roomState = useSelector((state:RootState) => state.room.room);
 
   const [rooms, setRooms] = useState<RoomModel[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<string>("beyzainci"); // TO DO: DEĞİŞTİR
+  const [selectedRoom, setSelectedRoom] = useState<string>("");
   const params = useParams<{room:string}>();
   const userId = 1; // TO DO: DEĞİŞTİR
   const [recipientId, setRecipientId] = useState<number>(2);
@@ -47,7 +45,7 @@ const MyChatPage = (props: Props) => {
 
   //  Managing Message Room 
   useEffect(() => {
-    setSelectedRoom(roomState);
+    setSelectedRoom(roomState.room);
   }, [roomState]);
   
 

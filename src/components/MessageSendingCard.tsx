@@ -1,9 +1,5 @@
 import React, { useState } from "react";
 import { IconComponent } from "../utils/Icons";
-import MessageService from "../services/MessageService";
-import { useDispatch } from "react-redux";
-import { setSentMessage } from "../store/messagesSlice";
-import { SentMessageModel } from "../models/SentMessageModel";
 import { Socket } from "socket.io-client";
 
 

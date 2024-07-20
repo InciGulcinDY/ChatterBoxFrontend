@@ -1,12 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserModel } from "../models/UserModel";
+import { RoomModel } from "../models/RoomModel";
 
 type RoomState = {
-    room: string;
+    room: RoomModel;
 };
 
 const initialState : RoomState = {
-    room: '',
+    room: {
+        room: "",
+        userId:0,
+        username:"",
+        image:"",
+        status:"",    
+        unreadMessagesNumber: 0 
+    }
 }
 
 const roomSlice = createSlice({
@@ -14,14 +21,14 @@ const roomSlice = createSlice({
     initialState,
     reducers: {
         setRoom(state, action: PayloadAction<string>) {
-            state.room = action.payload;
+            state.room.room = action.payload;
         },
-        setRecipient(state, action: PayloadAction<UserModel>) {
-            
+        setSelectedRoom(state, action: PayloadAction<RoomModel>) {
+            state.room = action.payload;
         }
     }
 });
 
-export const { setRoom } = roomSlice.actions;
+export const { setRoom, setSelectedRoom } = roomSlice.actions;
 
 export default roomSlice.reducer;

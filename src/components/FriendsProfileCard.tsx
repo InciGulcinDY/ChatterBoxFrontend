@@ -4,11 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFriend } from "../store/friendSlice";
 import { RootState } from "../store/configureStore";
 import { RoomModel } from "../models/RoomModel";
+import { setSelectedRoom } from "../store/roomSlice";
 
 type Props = {
   room: RoomModel;
-  //friend: UserModel;
-  //unreadCount: number;
 };
 
 //  Not: it may be used with the new design, delete later!
@@ -19,7 +18,7 @@ const FriendsProfileCard: React.FC<Props> = ({ room }) => {
   );
 
   const handleClick = () => {
-    //dispatch(setFriend(friend));
+    dispatch(setSelectedRoom(room));
   };
 
   return (

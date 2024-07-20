@@ -1,4 +1,3 @@
-import { UserModel } from "./UserModel";
 
 export interface RoomModel {
 

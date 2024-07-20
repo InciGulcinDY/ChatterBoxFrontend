@@ -13,7 +13,7 @@ const SidePanel: React.FC<Props> = ({ rooms }) => {
       {
         rooms.length > 0 ? (
           rooms.map(room => (
-            <FriendsProfileCard room={room} />
+            <FriendsProfileCard key={room.userId} room={room} />
           ))
         ) : (
           <div className="card mt-3">
