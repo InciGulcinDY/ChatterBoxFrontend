@@ -5,16 +5,25 @@ import { SuccessResponse } from "../models/SuccessResponse";
 import { SentMessageModel } from "../models/SentMessageModel";
 import { ChatMessageModel } from "../models/ChatMessageModel";
 import { API_BASE_URL } from "../utils/constants/apiConstants";
+import { RoomModel } from "../models/RoomModel";
 
 const baseURL = `${API_BASE_URL}/message`;
 
-// Son yazilanlarrrrrrrrrrr\111111111111
 
+//  Fetching all rooms that 
+const getAllRooms = async(userId: number) : Promise<RoomModel[]> => {
+  const response = await axios.get<RoomModel[]>(`http://localhost:8080/message/rooms/${userId}`);
+  return response.data;
+}
+
+//  Fetching all messages in the relevant room
 const getAllMessages = async(room:string): Promise<ChatMessageModel[]> => {
   const response = await axios.get<ChatMessageModel[]>(`${baseURL}/${room}`);
   return response.data;
 }
 
+
+// TODO: Delete functions below!
 
 //  Fetching all messages of the user and his/her friend
 const getAllByFriend = async (
@@ -61,11 +70,6 @@ const getReadMessages = async (
   return response.data;
 };
 
-//  Send a request for creating new message on the DB
-const add = async (request: SentMessageModel): Promise<MessageModel> => {
-  const response = await axios.post<MessageModel>(`${baseURL}/add`, request);
-  return response.data;
-};
 
 //  Fetching unread message count for each friend of the user
 const getUnreadMessageCounts = async (
@@ -90,10 +94,10 @@ const markAsRead = async (messageId: number) => {
 };
 
 const MessageService = {
+  getAllRooms,
   getAllMessages,
   getAllByFriend,
   getAll,
-  add,
   getAllFriends,
   getUnreadMessages,
   getReadMessages,

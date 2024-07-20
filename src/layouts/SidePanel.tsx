@@ -1,25 +1,28 @@
 import React from 'react';
 import FriendsProfileCard from '../components/FriendsProfileCard';
-import { UserModel } from '../models/UserModel';
+import { RoomModel } from '../models/RoomModel';
+import { Link } from 'react-router-dom';
 
 type Props = {
-  friends: UserModel[];
-  unreadCounts: { [key: number]: number };
-  onSelectedFriend: (selectedFriendId: number) => void;
+  rooms: RoomModel[],
 };
-//  Not: it may be used with the new design, delete later!
-const SidePanel: React.FC<Props> = ({ friends, unreadCounts, onSelectedFriend }) => {
+
+const SidePanel: React.FC<Props> = ({ rooms }) => {
   return (
     <div className='mt-2'>
-      {friends.length > 0 ? (
-        friends.map(friend => (
-          <div key={friend.id} onClick={() => onSelectedFriend(friend.id)}>
-            <FriendsProfileCard friend={friend} unreadCount={unreadCounts[friend.id] || 0} />
-          </div>
-        ))
-      ) : (
-        <div>No message</div>
-      )}
+      {
+        rooms.length > 0 ? (
+          rooms.map(room => (
+            <FriendsProfileCard room={room} />
+          ))
+        ) : (
+          <div className="card mt-3">
+            <div className="card-body">
+              You have not enrolled any message room! <Link to={"/api/newmessageroom"} >Start here!</Link>
+            </div>
+          </div>          
+        )
+      }
     </div>
   );
 };

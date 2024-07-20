@@ -63,7 +63,7 @@ const MessageRoom = (props: Props) => {
 
     fetchMessages();
     return () => {};
-  }, [props.room]);
+  }, [props.room, messages]);
 
   return (
     <div className="message_root_div" style={{ marginBottom: "60px" }}>
